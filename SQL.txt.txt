@@ -1,0 +1,53 @@
+SELECT * 
+FROM users 
+LIMIT 200;
+
+SELECT * 
+FROM progress 
+LIMIT 200;
+
+SELECT email_domain, COUNT(*) 
+FROM users 
+GROUP BY 1 
+ORDER BY COUNT(email_domain) DESC 
+LIMIT 25;
+
+SELECT COUNT(city) 
+FROM users 
+WHERE city = 'New York';
+
+SELECT COUNT(mobile_app) 
+FROM users 
+WHERE mobile_app = 'mobile-user';
+
+SELECT strftime('%H',sign_ap_at), COUNT(*)
+FROM users
+GROUP BY 1;
+
+WITH new_table AS (
+SELECT * 
+FROM users 
+LEFT JOIN progress 
+ON u.user_id = p.user_id)
+
+SELECT email_domain, 
+COUNT( CASE WHEN learn_sql IN ('completed', 'started') THEN 1 END), 
+COUNT(CASE WHEN learn_cpp IN ('completed', 'started') THEN 1 END), 
+COUNT(CASE WHEN learn_html IN ('completed', 'started') THEN 1 END),
+COUNT(CASE WHEN learn_javascript IN ('completed', 'started') THEN 1 END),
+COUNT(CASE WHEN learn_java IN ('completed', 'started') THEN 1 END), COUNT(email_domain)
+FROM new_table
+GROUP BY email_domain
+ORDER BY COUNT(email_domain) DESC;
+
+SELECT city, 
+COUNT(CASE WHEN learn_sql IN ('completed', 'started') THEN 1 END), 
+COUNT(CASE WHEN learn_cpp IN ('completed', 'started') THEN 1 END), 
+COUNT(CASE WHEN learn_html IN ('completed', 'started') THEN 1 END),
+COUNT(CASE WHEN learn_javascript IN ('completed', 'started') THEN 1 END),
+COUNT(CASE WHEN learn_java IN ('completed', 'started') THEN 1 END), COUNT(city)
+FROM new_table
+GROUP BY city
+HAVING city IN ('New York', 'Chicago');
+
+
